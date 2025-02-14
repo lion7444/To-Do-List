@@ -1,0 +1,79 @@
+import json
+
+TASKS_FILE = "tasks.json"
+
+def load_tasks():
+    try:
+        with open(TASKS_FILE, "r") as file:
+            return json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+def save_tasks(tasks):
+    with open(TASKS_FILE, "w") as file:
+        json.dump(tasks, file, indent=4)
+
+def add_task(task):
+    tasks = load_tasks()
+    tasks.append({"task": task, "done": False})
+    save_tasks(tasks)
+    print("Задача добавлена!")
+
+def list_tasks():
+    tasks = load_tasks()
+    if not tasks:
+        print("Список задач пуст.")
+    else:
+        for i, task in enumerate(tasks, 1):
+            status = "✔" if task["done"] else "✘"
+            print(f"{i}. [{status}] {task['task']}")
+
+def complete_task(index):
+    tasks = load_tasks()
+    if 0 <= index < len(tasks):
+        tasks[index]["done"] = True
+        save_tasks(tasks)
+        print("Задача отмечена как выполненная!")
+    else:
+        print("Некорректный номер задачи.")
+
+def delete_task(index):
+    tasks = load_tasks()
+    if 0 <= index < len(tasks):
+        tasks.pop(index)
+        save_tasks(tasks)
+        print("Задача удалена!")
+    else:
+        print("Некорректный номер задачи.")
+
+def main():
+    while True:
+        print("\nМеню:")
+        print("1. Добавить задачу")
+        print("2. Показать задачи")
+        print("3. Отметить задачу выполненной")
+        print("4. Удалить задачу")
+        print("5. Выход")
+        choice = input("Выберите действие: ")
+        
+        if choice == "1":
+            task = input("Введите задачу: ")
+            add_task(task)
+        elif choice == "2":
+            list_tasks()
+        elif choice == "3":
+            list_tasks()
+            index = int(input("Введите номер задачи: ")) - 1
+            complete_task(index)
+        elif choice == "4":
+            list_tasks()
+            index = int(input("Введите номер задачи: ")) - 1
+            delete_task(index)
+        elif choice == "5":
+            print("Выход из программы.")
+            break
+        else:
+            print("Некорректный ввод. Попробуйте снова.")
+
+if __name__ == "__main__":
+    main()
