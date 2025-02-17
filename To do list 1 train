@@ -1,4 +1,5 @@
 import json
+import datetime
 
 TASKS_FILE = "tasks.json"
 
@@ -15,7 +16,7 @@ def save_tasks(tasks):
 
 def add_task(task):
     tasks = load_tasks()
-    tasks.append({"task": task, "done": False})
+    tasks.append({"task": task, "done": False, "created_at": str(datetime.datetime.now())})
     save_tasks(tasks)
     print("Задача добавлена!")
 
@@ -26,7 +27,8 @@ def list_tasks():
     else:
         for i, task in enumerate(tasks, 1):
             status = "✔" if task["done"] else "✘"
-            print(f"{i}. [{status}] {task['task']}")
+            created_at = task.get("created_at", "неизвестно")
+            print(f"{i}. [{status}] {task['task']} (Добавлено: {created_at})")
 
 def complete_task(index):
     tasks = load_tasks()
