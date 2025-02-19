@@ -1,0 +1,32 @@
+def get_valid_index(tasks):
+    while True:
+        try:
+            index = int(input("Enter task number: ")) - 1
+            if 0 <= index < len(tasks):
+                return index
+            else:
+                print("Error: Task number out of range.")
+        except ValueError:
+            print("Error: Please enter a valid number.")
+
+def complete_task():
+    tasks = load_tasks()
+    if not tasks:
+        print("Task list is empty.")
+        return
+    list_tasks()
+    index = get_valid_index(tasks)
+    tasks[index]["done"] = True
+    save_tasks(tasks)
+    print("Task marked as completed!")
+
+def delete_task():
+    tasks = load_tasks()
+    if not tasks:
+        print("Task list is empty.")
+        return
+    list_tasks()
+    index = get_valid_index(tasks)
+    tasks.pop(index)
+    save_tasks(tasks)
+    print("Task deleted!")
